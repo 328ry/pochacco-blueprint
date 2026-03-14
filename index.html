@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ポチャッコの家 設計図 - Heartopia</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Helvetica Neue', 'Hiragino Sans', 'Meiryo', sans-serif;
+    background: #f8f0f4;
+    color: #333;
+    padding: 20px;
+    line-height: 1.6;
+  }
+
+  h1 { text-align: center; font-size: 1.6rem; color: #e75480; }
+  .subtitle { text-align: center; color: #999; font-size: 0.85rem; margin-bottom: 24px; }
+
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 960px;
+    margin: 0 auto 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .card h2 {
+    font-size: 1.15rem;
+    color: #e75480;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #fce4ec;
+  }
+
+  /* ===== Wall type diagram ===== */
+  .wall-diagram {
+    display: flex;
+    gap: 24px;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px 0;
+    flex-wrap: wrap;
+  }
+
+  .wall-col {
+    text-align: center;
+  }
+
+  .wall-block {
+    width: 60px;
+    background: #e0e0e0;
+    border: 2px solid #bbb;
+    border-radius: 4px;
+    margin: 0 auto 8px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .wall-block .unit-line {
+    width: 100%;
+    border-top: 1px dashed rgba(0,0,0,0.2);
+  }
+
+  .wall-block .unit-cell {
+    height: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #999;
+  }
+
+  .wall-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+  }
+
+  .wall-size {
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  .wall-eq {
+    font-size: 1.5rem;
+    color: #ccc;
+    align-self: center;
+    padding-bottom: 30px;
+  }
+
+  /* Size comparison bar */
+  .size-bar {
+    display: flex;
+    align-items: stretch;
+    gap: 2px;
+    margin: 16px auto;
+    max-width: 500px;
+    height: 40px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .size-bar > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  /* Height limit diagram */
+  .height-diagram {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 16px 0;
+  }
+
+  .h-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .h-wall {
+    width: 50px;
+    border: 2px solid #bbb;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: #666;
+    font-weight: 600;
+  }
+
+  .h-floor {
+    width: 70px;
+    height: 6px;
+    background: #8d6e63;
+    border-radius: 2px;
+  }
+
+  .h-label {
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 4px;
+  }
+
+  .h-bracket {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: #e75480;
+    font-weight: 600;
+    padding: 0 8px;
+  }
+
+  .h-bracket .brace {
+    width: 2px;
+    flex: 1;
+    background: #e75480;
+    margin: 4px 0;
+  }
+
+  /* ===== Layer selector ===== */
+  .layer-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .layer-btn {
+    padding: 10px 18px;
+    border: 2px solid #eee;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .layer-btn .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .layer-btn.active {
+    border-color: #e75480;
+    background: #fce4ec;
+    font-weight: 600;
+    color: #c2185b;
+  }
+
+  .layer-btn:hover { border-color: #f48fb1; }
+
+  /* ===== Grid ===== */
+  .grid-container {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .grid-area { overflow-x: auto; padding: 8px 0; flex: 1; }
+
+  .bp {
+    border-collapse: collapse;
+    margin: 0 auto;
+  }
+
+  .bp td {
+    width: 28px;
+    height: 28px;
+    border: 1px solid rgba(0,0,0,0.06);
+    text-align: center;
+    font-size: 9px;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .bp td.hdr {
+    background: #f8f8f8 !important;
+    color: #bbb;
+    font-size: 10px;
+    font-weight: 600;
+    border-color: #f0f0f0;
+  }
+
+  .bp td.E { background: transparent; }
+  .bp td.W { background: #ffffff; border-color: rgba(0,0,0,0.12) !important; }
+  .bp td.B { background: #2d2d2d; }
+  .bp td.M { background: #d32f2f; }
+  .bp td.D { background: #263238; }
+  .bp td.G { background: #80cbc4; }
+  .bp td.L { background: #b3e5fc; }
+  .bp td.F { background: #e0e0e0; }
+
+  .bp td.dim { opacity: 0.15; }
+  .bp td.dim.E { opacity: 0; }
+  .bp td.highlight { box-shadow: inset 0 0 0 2px #e75480; }
+
+  .bp td .label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    color: rgba(255,255,255,0.9);
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    pointer-events: none;
+  }
+
+  .bp td.W .label { color: rgba(0,0,0,0.3); text-shadow: none; }
+  .bp td.E .label { color: rgba(0,0,0,0.2); text-shadow: none; }
+
+  /* Side height indicator */
+  .height-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 90px;
+    padding-top: 29px; /* align with first grid row */
+  }
+
+  .hi-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border-left: 3px solid;
+    padding-left: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* Layer info box */
+  .layer-info {
+    margin-top: 16px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+
+  .layer-info h3 { font-size: 1rem; margin-bottom: 8px; }
+  .layer-info ul { margin: 8px 0 0 18px; font-size: 0.85rem; }
+  .layer-info ul li { margin-bottom: 4px; }
+
+  .info-ear { background: #f3e5f5; }
+  .info-ear h3 { color: #7b1fa2; }
+  .info-face { background: #e3f2fd; }
+  .info-face h3 { color: #1565c0; }
+  .info-body { background: #fce4ec; }
+  .info-body h3 { color: #c2185b; }
+  .info-all { background: #e8f5e9; }
+  .info-all h3 { color: #2e7d32; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+    justify-content: center;
+  }
+
+  .legend i {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.12);
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+
+  .legend span { font-size: 0.8rem; color: #666; }
+
+  /* ===== Build order ===== */
+  .build-order {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .bo-step {
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #fafafa;
+    border-left: 4px solid #e75480;
+  }
+
+  .bo-num {
+    width: 30px;
+    height: 30px;
+    background: #e75480;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .bo-text { font-size: 0.85rem; }
+  .bo-text strong { color: #c2185b; display: block; margin-bottom: 2px; }
+  .bo-text small { color: #999; }
+
+  /* ===== Review cards ===== */
+  .review-scroll {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 4px 0 12px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .rv {
+    min-width: 280px;
+    max-width: 320px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    background: #fafafa;
+    scroll-snap-align: start;
+  }
+
+  .rv img { width: 100%; height: 160px; object-fit: cover; }
+
+  .rv-body { padding: 12px; }
+  .rv-body h4 { font-size: 0.85rem; margin-bottom: 6px; color: #333; }
+  .rv-body p { font-size: 0.8rem; color: #777; margin: 0; }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+
+  .tg { background: #e8f5e9; color: #2e7d32; }
+  .ti { background: #e3f2fd; color: #1565c0; }
+
+  /* Summary */
+  .summary-box {
+    background: #fce4ec;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+
+  .summary-box h3 { color: #c2185b; font-size: 0.95rem; margin-bottom: 10px; }
+
+  .sg {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+  }
+
+  .sg > div {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.8rem;
+  }
+
+  .sg > div strong { display: block; color: #c2185b; margin-bottom: 2px; font-size: 0.85rem; }
+  .sg > div p { color: #666; margin: 0; }
+
+  /* Tooltip */
+  .tt-tip {
+    position: fixed;
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    pointer-events: none;
+    z-index: 100;
+    display: none;
+  }
+
+  /* Note box */
+  .note {
+    background: #fff3e0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    color: #e65100;
+    margin-top: 14px;
+  }
+  .note strong { color: #bf360c; }
+
+  .note-blue {
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+  .note-blue strong { color: #0d47a1; }
+
+  /* Mobile */
+  @media (max-width: 700px) {
+    body { padding: 10px; }
+    h1 { font-size: 1.3rem; }
+    .card { padding: 16px; }
+    .bp td { width: 22px; height: 22px; }
+    .layer-btn { padding: 8px 12px; font-size: 0.8rem; }
+    .grid-container { flex-direction: column; }
+    .height-indicator { display: none; }
+    .wall-diagram { gap: 12px; }
+    .wall-block { width: 48px; }
+  }
+
+  @media print {
+    body { background: white; }
+    .card { box-shadow: none; border: 1px solid #eee; page-break-inside: avoid; }
+    .review-scroll { flex-wrap: wrap; }
+    .rv { min-width: 45%; }
+    .bp td.dim { opacity: 1 !important; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🐶 ポチャッコの家 設計図</h1>
+<p class="subtitle">Heartopia（ハートピアスローライフ）建築ガイド</p>
+
+<!-- ============ SECTION 1: 壁の種類 ============ -->
+<div class="card">
+  <h2>🧱 壁の種類とサイズ</h2>
+  <p style="color:#888; font-size:0.85rem; margin-bottom:8px;">Heartopiaの壁は3種類。高さが違うだけで、どれもペイントで色を変えられる。</p>
+
+  <div class="wall-diagram">
+    <div class="wall-col">
+      <div class="wall-block" style="height:20px;">
+        <div class="unit-cell"></div>
+      </div>
+      <div class="wall-label">低い壁</div>
+      <div class="wall-size">1単位</div>
+    </div>
+
+    <div class="wall-eq">×2 =</div>
+
+    <div class="wall-col">
+      <div class="wall-block" style="height:40px;">
+        <div class="unit-cell" style="border-bottom:1px dashed rgba(0,0,0,0.15)"></div>
+        <div class="unit-cell"></div>
+      </div>
+      <div class="wall-label">腰壁</div>
+      <div class="wall-size">2単位</div>
+    </div>
+
+    <div class="wall-eq">×2 + 低 =</div>
+
+    <div class="wall-col">
+      <div class="wall-block" style="height:100px;">
+        <div class="unit-cell" style="border-bottom:1px dashed rgba(0,0,0,0.15)">腰</div>
+        <div class="unit-cell" style="border-bottom:1px dashed rgba(0,0,0,0.15)"></div>
+        <div class="unit-cell" style="border-bottom:1px dashed rgba(0,0,0,0.15)">腰</div>
+        <div class="unit-cell" style="border-bottom:1px dashed rgba(0,0,0,0.15)"></div>
+        <div class="unit-cell">低</div>
+      </div>
+      <div class="wall-label">普通の壁</div>
+      <div class="wall-size">5単位（＝1階分）</div>
+    </div>
+  </div>
+
+  <!-- Size comparison bar -->
+  <p style="text-align:center; font-size:0.8rem; color:#999; margin-bottom:6px;">サイズ比較（横に並べたイメージ）</p>
+  <div class="size-bar">
+    <div style="flex:1; background:#90caf9;">低い壁</div>
+    <div style="flex:2; background:#64b5f6;">腰壁</div>
+    <div style="flex:5; background:#1e88e5;">普通の壁（1階分）</div>
+  </div>
+
+  <div class="note" style="margin-top:20px;">
+    <strong>📏 高さ上限:</strong> 建物の最大高さは<strong>普通の壁 約3枚分（＝15単位 ＝ 3階相当）</strong>。
+    屋根を含めるとギリギリなので、実用的には<strong>2〜3階建て</strong>が限界。<br>
+    壁の上に壁を積むには<strong>間に床パーツを挟む</strong>必要がある（床→壁→床→壁→…→屋根の順）。
+  </div>
+
+  <!-- Height limit visual -->
+  <p style="text-align:center; font-size:0.8rem; color:#999; margin:16px 0 6px;">高さ上限のイメージ</p>
+  <div class="height-diagram">
+    <div class="h-stack">
+      <div class="h-wall" style="height:60px; background:#e8f5e9;">3F壁</div>
+      <div class="h-floor"></div>
+      <div class="h-wall" style="height:60px; background:#e3f2fd;">2F壁</div>
+      <div class="h-floor"></div>
+      <div class="h-wall" style="height:60px; background:#fce4ec;">1F壁</div>
+      <div class="h-floor"></div>
+      <div class="h-label">普通の壁 × 3（＋床3枚）</div>
+    </div>
+    <div class="h-bracket">
+      <span>← 最大高さ</span>
+      <div class="brace"></div>
+      <span>約15単位</span>
+    </div>
+  </div>
+
+  <div class="note note-blue">
+    <strong>💡 ポチャッコの家に必要な高さ:</strong><br>
+    ・1階（建物本体）= 普通の壁 × 1 = <strong>5単位</strong><br>
+    ・2階（顔）= 普通の壁 × 1〜2 = <strong>5〜10単位</strong><br>
+    ・耳 = 低い壁 or 腰壁で追加 = <strong>2〜4単位</strong><br>
+    → 合計 <strong>12〜19単位</strong>。上限ギリギリだけど、壁タイプの組み合わせで収まる！<br>
+    <strong>※ スクショの参考家も3階分ギリギリのサイズで建てている</strong>
+  </div>
+</div>
+
+<!-- ============ SECTION 2: 土地全体の俯瞰図 ============ -->
+<div class="card">
+  <h2>🗺️ 土地全体の俯瞰図（30×24 = 720タイル）</h2>
+  <p style="color:#888; font-size:0.85rem; margin-bottom:6px;">
+    18プロット（各8×5）を全部解放した状態。ポチャッコの家を中央に置いたレイアウト案。
+  </p>
+
+  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+    <div style="display:flex; align-items:center; gap:4px; font-size:0.8rem;"><span style="display:inline-block;width:14px;height:14px;background:#d32f2f;border-radius:2px;"></span> ポチャッコの家（建物）</div>
+    <div style="display:flex; align-items:center; gap:4px; font-size:0.8rem;"><span style="display:inline-block;width:14px;height:14px;background:#a5d6a7;border-radius:2px;"></span> 庭園（花壇・低木）</div>
+    <div style="display:flex; align-items:center; gap:4px; font-size:0.8rem;"><span style="display:inline-block;width:14px;height:14px;background:#ffe082;border-radius:2px;"></span> 農場エリア</div>
+    <div style="display:flex; align-items:center; gap:4px; font-size:0.8rem;"><span style="display:inline-block;width:14px;height:14px;background:#90caf9;border-radius:2px;"></span> 屋外家具・デコ</div>
+    <div style="display:flex; align-items:center; gap:4px; font-size:0.8rem;"><span style="display:inline-block;width:14px;height:14px;background:#c48b9f;border-radius:2px;"></span> 耳の張り出し（床なし）</div>
+    <div style="display:flex; align-items:center; gap:4px; font-size:0.8rem;"><span style="display:inline-block;width:14px;height:14px;background:#e0e0e0;border-radius:2px;"></span> 通路・空きスペース</div>
+  </div>
+
+  <div class="grid-area">
+    <table class="bp" id="land-grid" style="border:2px solid #e0e0e0;"></table>
+  </div>
+
+  <!-- Stats -->
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; justify-content:center;">
+    <div style="background:#fce4ec; border-radius:10px; padding:10px 16px; text-align:center; font-size:0.8rem;">
+      <strong style="color:#c2185b; font-size:1.1rem;" id="house-pct">—</strong><br>建物（床面積）
+    </div>
+    <div style="background:#e8f5e9; border-radius:10px; padding:10px 16px; text-align:center; font-size:0.8rem;">
+      <strong style="color:#2e7d32; font-size:1.1rem;" id="garden-pct">—</strong><br>庭園
+    </div>
+    <div style="background:#fff8e1; border-radius:10px; padding:10px 16px; text-align:center; font-size:0.8rem;">
+      <strong style="color:#f57f17; font-size:1.1rem;" id="farm-pct">—</strong><br>農場
+    </div>
+    <div style="background:#e3f2fd; border-radius:10px; padding:10px 16px; text-align:center; font-size:0.8rem;">
+      <strong style="color:#1565c0; font-size:1.1rem;" id="deco-pct">—</strong><br>屋外デコ
+    </div>
+    <div style="background:#f5f5f5; border-radius:10px; padding:10px 16px; text-align:center; font-size:0.8rem;">
+      <strong style="color:#666; font-size:1.1rem;" id="free-pct">—</strong><br>空き
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:14px;">
+    <strong>💡 サイズバランス:</strong>
+    建物の床面積は<strong>12×8 = 96タイル（720中の13%）</strong>。走りポーズの腕・脚は壁だけで床なし。
+    残り87%を庭・農場・デコにたっぷり使える。内装は1階+2階で合計120タイル以上。十分な家だよ。
+  </div>
+</div>
+
+<!-- ============ SECTION 3: 正面設計図 ============ -->
+<div class="card">
+  <h2>📐 正面デザイン（ペイントマップ）</h2>
+  <p style="color:#888; font-size:0.85rem; margin-bottom:14px;">
+    1マス＝ペイント1区画。ボタンで<strong>パーツごとにハイライト</strong>できるよ。<br>
+    右側に壁の種類と高さの対応を表示してるので、組み合わせの参考にしてね。
+  </p>
+
+  <div class="layer-bar">
+    <button class="layer-btn active" onclick="setLayer('all', this)">
+      <span class="dot" style="background:linear-gradient(135deg,#2d2d2d 33%,#fff 33%,#fff 66%,#d32f2f 66%)"></span>
+      ぜんぶ表示
+    </button>
+    <button class="layer-btn" onclick="setLayer('ear', this)">
+      <span class="dot" style="background:#2d2d2d"></span>
+      耳
+    </button>
+    <button class="layer-btn" onclick="setLayer('face', this)">
+      <span class="dot" style="background:#fff; border:1px solid #ccc"></span>
+      顔
+    </button>
+    <button class="layer-btn" onclick="setLayer('body', this)">
+      <span class="dot" style="background:#d32f2f"></span>
+      胴体＆脚
+    </button>
+  </div>
+
+  <div class="grid-container">
+    <div class="grid-area">
+      <table class="bp" id="grid"></table>
+    </div>
+    <!-- Height indicator on the right side -->
+    <div class="height-indicator" id="height-ind"></div>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:#fff"></i>白（顔/体/脚）</span>
+    <span><i style="background:#2d2d2d"></i>黒（耳・目・鼻）</span>
+    <span><i style="background:#d32f2f"></i>赤（衣装/バンダナ）</span>
+    <span><i style="background:#263238"></i>ドア枠</span>
+    <span><i style="background:#80cbc4"></i>ドアガラス</span>
+    <span><i style="background:#b3e5fc"></i>窓</span>
+    <span><i style="background:#e0e0e0"></i>窓枠</span>
+  </div>
+
+  <div id="info-all" class="layer-info info-all">
+    <h3>🏠 全体の構成（走りポーズ版）</h3>
+    <ul>
+      <li>横 <strong>18マス</strong>（腕の広がり含む）× 高さ <strong>15段</strong> × 奥行き <strong>8マス</strong></li>
+      <li><strong>耳</strong>（行1〜2）= 腰壁 = 2単位。左右に大きく広がるフロッピーイヤー</li>
+      <li><strong>顔</strong>（行3〜8）= 普通の壁+低い壁 = 6単位。白+黒（目・鼻）</li>
+      <li><strong>胴体</strong>（行9〜13）= 普通の壁 = 5単位。赤い衣装+窓+ドア。建物本体（幅12マス）</li>
+      <li><strong>脚</strong>（行14〜15）= 腰壁 = 2単位。走りポーズで左右非対称に開いている</li>
+      <li>合計 <strong>2+6+5+2 = 15単位 = 高さ上限ぴったり</strong></li>
+      <li><strong>床面積</strong>: 12×8 = 96タイル。腕と脚は壁のみ（床なし）</li>
+    </ul>
+    <div class="note note-blue" style="margin-top:8px; font-size:0.82rem;">
+      <strong>🏃 公式画像（list-pochacco.png）の走りポーズを再現:</strong><br>
+      ・<strong>腕</strong>: 左腕が前方に大きく伸び（行9-10左側）、右腕は後方（行9-10右側）<br>
+      ・<strong>脚</strong>: 左脚が前に出て（行14-15左）、右脚が後ろ（行14-15右）<br>
+      ・<strong>耳</strong>: 走りの勢いでバサッと横に広がっている<br>
+      ・全体に<strong>非対称</strong>なのが走りポーズの特徴。左右で腕・脚の位置が違うよ
+    </div>
+    <div class="note" style="margin-top:10px;">
+      <strong>⚠️ 壁1枚 = 1色ルール:</strong> 1枚の壁に<strong>1色しか塗れない</strong>。
+      色を変えたい行は壁を分ける必要があるよ。<br>
+      → 顔は白と黒が行ごとに混在するから、<strong>低い壁を1行ずつ積む</strong>のがおすすめ。
+      詳しくは「顔」「建物」ボタンで確認してね。
+    </div>
+  </div>
+
+  <div id="info-ear" class="layer-info info-ear" style="display:none;">
+    <h3>👂 耳の作り方（最重要パーツ！）</h3>
+    <ul>
+      <li>走りの勢いで<strong>バサッと横に広がった</strong>フロッピーイヤー</li>
+      <li>左耳: 列2-3 → 列3-4（行1→行2で斜めに下がる）</li>
+      <li>右耳: 列16-17 → 列15-16（行1→行2で斜めに下がる）</li>
+      <li>行3では耳先端（列4と列15）だけが残り、顔の丸みと繋がる</li>
+      <li><strong>壁の組み方</strong>: 行1〜2は腰壁 = 2単位。黒1色でOK</li>
+      <li><strong>色</strong>: 全部黒。シンプルに腰壁を黒で塗るだけ</li>
+    </ul>
+  </div>
+
+  <div id="info-face" class="layer-info info-face" style="display:none;">
+    <h3>😊 顔の作り方</h3>
+    <ul>
+      <li>行3〜8の6行 = <strong>普通の壁+低い壁</strong>の高さ</li>
+      <li>行3: 耳の先端が顔の横に残る＋額（白）</li>
+      <li>目: 行5の列7 と 列12（<strong>1マス</strong>の黒）← 公式の小さなつぶらな目</li>
+      <li>鼻: 行7の列9-10（<strong>横長2マス</strong>の黒）← 公式の楕円鼻</li>
+      <li>目と鼻の間に<strong>1行のスペース</strong>（行6）← ゆったりした配置を再現</li>
+      <li>行8: あご（下すぼまりの白）</li>
+    </ul>
+    <div class="note" style="margin-top:10px;">
+      <strong>⚠️ 塗り分け:</strong> 行5（目）と行7（鼻）に黒が混じる。<br>
+      → おすすめ: <strong>低い壁6枚</strong>を1行ずつ積んで、各行を個別にペイント
+    </div>
+  </div>
+
+  <div id="info-body" class="layer-info info-body" style="display:none;">
+    <h3>🧱 胴体＆脚の作り方（建物部分）</h3>
+    <ul>
+      <li><strong>胴体</strong>（行9〜13）= 普通の壁 = 5単位。赤い衣装。幅12マス（列4〜15）</li>
+      <li>行9-10: 腕が左右に伸びている（走りポーズ！白い手）</li>
+      <li>窓: 行11。左右に水色ガラス2枚ずつ + グレー窓枠</li>
+      <li>ドア: 行12-13の中央。黒フレーム + ミントガラス（4マス幅）</li>
+      <li><strong>脚</strong>（行14〜15）= 腰壁 = 2単位。走りで前後に開いた白い脚</li>
+    </ul>
+    <div class="note" style="margin-top:10px;">
+      <strong>⚠️ 塗り分け:</strong><br>
+      → 行9-10: 赤+白（腕）が混在 → <strong>低い壁×2</strong>で1行ずつ<br>
+      → 行11: 窓あり → <strong>低い壁1枚</strong><br>
+      → 行12-13: ドアあり → <strong>腰壁1枚</strong><br>
+      → 行14-15: 白い脚 → <strong>腰壁1枚</strong><br>
+      = 低い壁3 + 腰壁2 = 3+4 = 7単位... ⚠️ 実際は行9-13が5行、行14-15が2行なので普通の壁1枚(5)+腰壁1枚(2) = 7単位 ✅
+    </div>
+  </div>
+</div>
+
+<!-- ============ SECTION 3: 作る順番 ============ -->
+<div class="card">
+  <h2>🔨 作る順番</h2>
+  <div class="build-order">
+    <div class="bo-step">
+      <div class="bo-num">1</div>
+      <div class="bo-text">
+        <strong>脚レベル（行14-15）の壁</strong>
+        <small>地面に腰壁を白で配置。走りポーズの脚を再現（非対称！）</small>
+      </div>
+    </div>
+    <div class="bo-step">
+      <div class="bo-num">2</div>
+      <div class="bo-text">
+        <strong>胴体の床＋壁（行9-13）</strong>
+        <small>12×8の床を敷き、普通の壁で四方を囲む → 赤で塗る</small>
+      </div>
+    </div>
+    <div class="bo-step">
+      <div class="bo-num">3</div>
+      <div class="bo-text">
+        <strong>腕を作る（行9-10の左右）</strong>
+        <small>建物の両サイドに白い壁を伸ばす。走りポーズなので非対称に！</small>
+      </div>
+    </div>
+    <div class="bo-step">
+      <div class="bo-num">4</div>
+      <div class="bo-text">
+        <strong>窓とドアを配置</strong>
+        <small>行11に窓、行12-13にドアを設計図通りに</small>
+      </div>
+    </div>
+    <div class="bo-step">
+      <div class="bo-num">5</div>
+      <div class="bo-text">
+        <strong>2階の床（＝胴体の天井）</strong>
+        <small>壁の上に床パーツ。顔の土台になる</small>
+      </div>
+    </div>
+    <div class="bo-step">
+      <div class="bo-num">6</div>
+      <div class="bo-text">
+        <strong>顔の壁（行3-8）</strong>
+        <small>低い壁6枚を1行ずつ。白で塗って、目と鼻だけ黒に</small>
+      </div>
+    </div>
+    <div class="bo-step">
+      <div class="bo-num">7</div>
+      <div class="bo-text">
+        <strong>耳を作る（行1-2）</strong>
+        <small>床を挟んで腰壁を追加 → 黒く塗る。左右に大きく広げて！</small>
+      </div>
+    </div>
+    <div class="bo-step">
+      <div class="bo-num">8</div>
+      <div class="bo-text">
+        <strong>庭を飾って完成！</strong>
+        <small>紫陽花＋低木を正面に。花壇で統一感</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>⚠️ 壁を積むときの注意:</strong> 壁の上に壁を直接置けない！
+    必ず<strong>間に床パーツを挟む</strong>（床→壁→床→壁→…の順）。
+    床パーツは天井と兼用になるから無駄にならないよ。
+  </div>
+</div>
+
+<!-- ============ SECTION 4: 家の中身（間取り・家具） ============ -->
+<div class="card">
+  <h2>🏡 家の中身（間取り＆必須家具）</h2>
+  <p style="color:#888; font-size:0.85rem; margin-bottom:16px;">
+    ポチャッコの外観だけじゃなく、<strong>家として機能する中身</strong>も大事！<br>
+    套装（セット）家具を揃えると<strong>バフ（ボーナス効果）</strong>がつくので、部屋ごとにカテゴリを統一しよう。
+  </p>
+
+  <!-- Floor plan -->
+  <h3 style="font-size:0.95rem; color:#555; margin-bottom:10px;">📋 おすすめ間取り（上から見た図）</h3>
+  <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-bottom:20px;">
+    <!-- 1F -->
+    <div style="background:#fce4ec; border-radius:12px; padding:16px; min-width:240px; flex:1; max-width:360px;">
+      <div style="font-weight:600; color:#c2185b; margin-bottom:8px; font-size:0.9rem;">1階（胴体部分 = 行9〜13）</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+        <div style="background:white; border-radius:8px; padding:10px; text-align:center; font-size:0.8rem;">
+          <strong style="color:#e65100;">🍳 キッチン</strong><br>
+          調理台<br>カウンター<br>収納棚
+        </div>
+        <div style="background:white; border-radius:8px; padding:10px; text-align:center; font-size:0.8rem;">
+          <strong style="color:#2e7d32;">🛋️ リビング</strong><br>
+          ソファ<br>テーブル<br>ラグ
+        </div>
+        <div style="background:white; border-radius:8px; padding:10px; text-align:center; font-size:0.8rem; grid-column:1/3;">
+          <strong style="color:#1565c0;">🔨 工房コーナー</strong><br>
+          工芸台（Work Bench）← 家具を自作するのに必須
+        </div>
+      </div>
+    </div>
+    <!-- 2F -->
+    <div style="background:#e3f2fd; border-radius:12px; padding:16px; min-width:240px; flex:1; max-width:360px;">
+      <div style="font-weight:600; color:#1565c0; margin-bottom:8px; font-size:0.9rem;">2階（顔の裏側 = 行3〜8）</div>
+      <div style="display:grid; grid-template-columns:1fr; gap:6px;">
+        <div style="background:white; border-radius:8px; padding:10px; text-align:center; font-size:0.8rem;">
+          <strong style="color:#7b1fa2;">🛏️ 寝室</strong><br>
+          ベッド（必須！スタミナ回復）<br>
+          ナイトスタンド × 2 ・ ランプ<br>
+          クローゼット
+        </div>
+        <div style="background:white; border-radius:8px; padding:10px; text-align:center; font-size:0.8rem;">
+          <strong style="color:#c2185b;">✨ デコスペース</strong><br>
+          お気に入りの家具・花・料理の飾り<br>
+          （家園評価スコアを上げるためにも◎）
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Must-have furniture -->
+  <h3 style="font-size:0.95rem; color:#555; margin-bottom:10px;">🪑 絶対に置くべき家具（優先度順）</h3>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:10px; margin-bottom:16px;">
+    <div style="background:#fff3e0; border-radius:10px; padding:12px; border-left:4px solid #e65100;">
+      <strong style="color:#e65100; font-size:0.85rem;">🛏️ ベッド</strong>
+      <p style="font-size:0.8rem; color:#666; margin:4px 0 0;">スタミナ回復の必須アイテム。套装にすると起床後に体力再生バフ</p>
+    </div>
+    <div style="background:#e8f5e9; border-radius:10px; padding:12px; border-left:4px solid #2e7d32;">
+      <strong style="color:#2e7d32; font-size:0.85rem;">🔨 工芸台</strong>
+      <p style="font-size:0.8rem; color:#666; margin:4px 0 0;">家具を自作する製作台。これがないと何も作れない</p>
+    </div>
+    <div style="background:#fce4ec; border-radius:10px; padding:12px; border-left:4px solid #c2185b;">
+      <strong style="color:#c2185b; font-size:0.85rem;">🍳 調理台</strong>
+      <p style="font-size:0.8rem; color:#666; margin:4px 0 0;">料理を作る。キッチン套装で失敗率ダウン＋品質UP</p>
+    </div>
+    <div style="background:#e3f2fd; border-radius:10px; padding:12px; border-left:4px solid #1565c0;">
+      <strong style="color:#1565c0; font-size:0.85rem;">📦 収納家具</strong>
+      <p style="font-size:0.8rem; color:#666; margin:4px 0 0;">アイテム・家具の保管に。序盤から投資しておくと楽</p>
+    </div>
+  </div>
+
+  <!-- Set bonus -->
+  <h3 style="font-size:0.95rem; color:#555; margin-bottom:10px;">🎁 套装（セット）ボーナス一覧</h3>
+  <p style="font-size:0.83rem; color:#888; margin-bottom:8px;">同じカテゴリの家具をまとめて置くと発動。部屋ごとにカテゴリを統一するのがコツ。</p>
+  <div style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; font-size:0.83rem;">
+      <thead>
+        <tr style="background:#fce4ec;">
+          <th style="padding:8px; text-align:left; color:#c2185b;">カテゴリ</th>
+          <th style="padding:8px; text-align:left; color:#c2185b;">ボーナス効果</th>
+          <th style="padding:8px; text-align:left; color:#c2185b;">置く場所</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #f0f0f0;"><td style="padding:8px;">🛏️ 寝室</td><td>最大体力UP、睡眠回復UP</td><td>2階</td></tr>
+        <tr style="border-bottom:1px solid #f0f0f0;"><td style="padding:8px;">🍳 キッチン</td><td>料理失敗率ダウン、品質UP</td><td>1階</td></tr>
+        <tr style="border-bottom:1px solid #f0f0f0;"><td style="padding:8px;">🛋️ リビング</td><td>体力消費軽減、回復速度UP</td><td>1階</td></tr>
+        <tr style="border-bottom:1px solid #f0f0f0;"><td style="padding:8px;">🌿 屋外</td><td>収穫量UP、水やり頻度ダウン</td><td>庭</td></tr>
+        <tr style="border-bottom:1px solid #f0f0f0;"><td style="padding:8px;">✨ デコ</td><td>NPCの好感度UP</td><td>どこでも</td></tr>
+        <tr><td style="padding:8px;">🎵 楽器</td><td>ペット親密度UP</td><td>お好みで</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Home evaluation -->
+  <div class="note note-blue" style="margin-top:16px;">
+    <strong>📊 家園評価スコア（毎週土曜 AM3:00）</strong><br>
+    スコアは<strong>家具の多様性</strong>で決まる。同じ家具を100個置くより、違う家具を20個置いた方がスコアが高い！<br>
+    ・ユニークなアイテム1個目 ≈ 100pt ／ 2個目以降 ≈ 1pt<br>
+    ・花、料理の飾り、図鑑アイテムも対象。<strong>いろんな種類をちょっとずつ</strong>飾ろう<br>
+    ・おしゃれレイアウトとスコア用を<strong>Blueprint機能で使い分ける</strong>のが上級者テク
+  </div>
+</div>
+
+<!-- ============ SECTION 5: スクショレビュー ============ -->
+<div class="card">
+  <h2>🔍 参考スクショ レビュー</h2>
+  <p style="color:#888; font-size:0.83rem; margin-bottom:14px;">← スクロールで全部見れる</p>
+
+  <div class="review-scroll">
+    <div class="rv">
+      <img src="共有/スクショ置き場/IMG_9022.png" alt="ポチャッコとキティ">
+      <div class="rv-body">
+        <h4>🐶 ポチャッコ（一番の参考）</h4>
+        <span class="tag tg">配色◎</span><span class="tag ti">耳の形</span>
+        <p>白い顔＋黒の垂れ耳＋赤い衣装。公式の走りポーズを再現</p>
+      </div>
+    </div>
+    <div class="rv">
+      <img src="共有/スクショ置き場/IMG_9027.png" alt="ポチャッコとキティ比較">
+      <div class="rv-body">
+        <h4>🐶🎀 ポチャッコ vs キティ</h4>
+        <span class="tag tg">サイズバランス◎</span>
+        <p>ほぼ同サイズ。ドアは共有スペースにガラスドア。1階のマルーンがよく見える</p>
+      </div>
+    </div>
+    <div class="rv">
+      <img src="共有/スクショ置き場/IMG_9026.png" alt="ポチャッコ正面">
+      <div class="rv-body">
+        <h4>🐶 ポチャッコ正面</h4>
+        <span class="tag ti">壁色の参考</span>
+        <p>赤い1階 + 黒フレームのガラスドア。風車・橋のある牧歌的エリア</p>
+      </div>
+    </div>
+    <div class="rv">
+      <img src="共有/スクショ置き場/IMG_9020.png" alt="全体俯瞰">
+      <div class="rv-body">
+        <h4>📍 全体俯瞰</h4>
+        <span class="tag tg">庭が統一◎</span>
+        <p>3軒横並び。前面に紫陽花＋低木の統一ガーデン。サイズ感の参考に</p>
+      </div>
+    </div>
+    <div class="rv">
+      <img src="共有/スクショ置き場/IMG_9024.png" alt="キティ見上げ">
+      <div class="rv-body">
+        <h4>🎀 キティ（見上げ）</h4>
+        <span class="tag ti">奥行き確認</span>
+        <p>奥行き約8マス確認。リボンが3D飛び出し。装飾パーツの付け方の参考に</p>
+      </div>
+    </div>
+    <div class="rv">
+      <img src="共有/スクショ置き場/IMG_9025.png" alt="クロミ">
+      <div class="rv-body">
+        <h4>💜 クロミの家</h4>
+        <span class="tag tg">コントラスト◎</span>
+        <p>ダーク系のクロミ。ポチャッコは白×パステルで対照的に</p>
+      </div>
+    </div>
+    <div class="rv">
+      <img src="共有/スクショ置き場/IMG_9028.png" alt="プリンとマイメロ">
+      <div class="rv-body">
+        <h4>🍮💗 プリン＆マイメロ</h4>
+        <span class="tag tg">庭の花◎</span>
+        <p>パステルカラー基調の街並み。花壇が全家共通のスタイル</p>
+      </div>
+    </div>
+    <div class="rv">
+      <img src="共有/スクショ置き場/IMG_9023.png" alt="マイメロとキティ">
+      <div class="rv-body">
+        <h4>🏠 マイメロ＆キティ</h4>
+        <span class="tag tg">ドア配置◎</span>
+        <p>ドア中央、窓は両サイド対称。この共通パターンを設計図に反映</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <h3>📝 ポイントまとめ</h3>
+    <div class="sg">
+      <div><strong>🎨 配色</strong><p>白（顔/体）+ 黒（耳・目）+ 赤（衣装）</p></div>
+      <div><strong>📏 サイズ</strong><p>横18 × 高さ15単位 × 奥行き8</p></div>
+      <div><strong>🏃 ポーズ</strong><p>公式の走りポーズ！腕と脚が非対称</p></div>
+      <div><strong>🧱 壁の積み方</strong><p>耳:腰壁 / 顔:低壁×6 / 胴体:普通壁 / 脚:腰壁</p></div>
+      <div><strong>🚪 玄関</strong><p>中央。黒枠＋ガラスドア</p></div>
+      <div><strong>👂 垂れ耳</strong><p>走りの勢いで横に広がる！</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="tt-tip" id="tip"></div>
+
+<script>
+// ===== Grid Data =====
+// 公式画像 list-pochacco.png の走りポーズを忠実に再現
+// 全身ポチャッコ = 建物そのもの（頭=上層、胴体=メイン建物、脚=地面レベル）
+//
+// 高さ内訳:
+//   行1〜2  (2行) = 耳（飛び上がり）= 腰壁
+//   行3〜8  (6行) = 顔 = 普通の壁+低い壁
+//   行9〜13 (5行) = 胴体（建物本体）= 普通の壁
+//   行14〜15(2行) = 脚 = 腰壁
+//   合計: 2+6+5+2 = 15行
+//
+// 幅: 18マス（腕の伸びを含む。建物本体は12マス幅）
+// 公式画像の走りポーズを再現するため、腕・脚がやや非対称
+//
+// 0=empty 1=white 2=black 3=red(outfit) 4=door-frame 5=window 6=door-glass 7=window-frame
+const G = [
+  // 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18
+  [ 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0], // 1  耳（バサッと広がり）┐腰壁
+  [ 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0], // 2  耳                 ┘(2行)
+  [ 0, 0, 0, 2, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 2, 0, 0, 0], // 3  耳先端+額          ┐
+  [ 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], // 4  顔（丸み）         │
+  [ 0, 0, 0, 0, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 0, 0, 0, 0], // 5  目                 │普通の壁
+  [ 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], // 6  目↔鼻の間          │+低い壁
+  [ 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 1, 1, 1, 0, 0, 0, 0, 0], // 7  鼻                 │(6行)
+  [ 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], // 8  あご               ┘
+  [ 0, 1, 1, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 1, 0], // 9  バンダナ+腕(走り)  ┐
+  [ 1, 1, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 1], // 10 胴体+腕伸ばし      │
+  [ 0, 0, 0, 3, 3, 5, 5, 7, 3, 3, 7, 5, 5, 3, 3, 0, 0, 0], // 11 窓                 │普通の壁
+  [ 0, 0, 0, 3, 3, 3, 3, 4, 6, 6, 4, 3, 3, 3, 3, 0, 0, 0], // 12 ドア               │(5行)
+  [ 0, 0, 0, 3, 3, 3, 3, 4, 6, 6, 4, 3, 3, 3, 3, 0, 0, 0], // 13 ドア               ┘
+  [ 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0], // 14 脚（走り：左前右後）┐腰壁
+  [ 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0], // 15 足（ストライド）    ┘(2行)
+];
+// 合計: 2 + 6 + 5 + 2 = 15行 = 高さ上限
+// 走りポーズ: 左腕が前に大きく出て(行9-10左)、右腕は後ろに控えめ(行9-10右)
+// 脚も左が前、右が後ろに開いている
+
+const CSS = ['E','W','B','M','D','L','G','F'];
+const NAMES = ['','白（顔/体）','黒（耳/目/鼻）','赤（衣装/バンダナ）','ドア枠','窓','ドアガラス','窓枠'];
+
+const LAYERS = {
+  all:  null,
+  ear:  { rows:[0,1,2] },
+  face: { rows:[2,3,4,5,6,7] },
+  body: { rows:[8,9,10,11,12,13,14] },
+};
+
+// Height sections for side indicator (1 row = 1 低い壁)
+const HEIGHT_SECTIONS = [
+  { rows: [0,1],              label: '耳\n腰壁\n(2単位)', color: '#7b1fa2', bg: '#f3e5f5' },
+  { rows: [2,3,4,5,6,7],     label: '顔\n普通壁+低壁\n(6単位)', color: '#1565c0', bg: '#e3f2fd' },
+  { rows: [8,9,10,11,12],    label: '胴体\n普通壁\n(5単位)', color: '#c2185b', bg: '#fce4ec' },
+  { rows: [13,14],           label: '脚\n腰壁\n(2単位)', color: '#2e7d32', bg: '#e8f5e9' },
+];
+
+let currentLayer = 'all';
+
+function buildGrid() {
+  const t = document.getElementById('grid');
+  t.innerHTML = '';
+  const cols = G[0].length;
+
+  const hr = document.createElement('tr');
+  hr.innerHTML = '<td class="hdr"></td>';
+  for (let c = 0; c < cols; c++) hr.innerHTML += `<td class="hdr">${c+1}</td>`;
+  t.appendChild(hr);
+
+  for (let r = 0; r < G.length; r++) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="hdr">${r+1}</td>`;
+
+    for (let c = 0; c < G[r].length; c++) {
+      const v = G[r][c];
+      const cls = CSS[v];
+      let extra = '';
+
+      if (currentLayer !== 'all') {
+        const L = LAYERS[currentLayer];
+        if (!L.rows.includes(r)) {
+          extra = ' dim';
+        } else if (v !== 0) {
+          extra = ' highlight';
+        }
+      }
+
+      const td = document.createElement('td');
+      td.className = cls + extra;
+      if (v !== 0) {
+        td.dataset.r = r + 1;
+        td.dataset.c = c + 1;
+        td.dataset.n = NAMES[v];
+      }
+
+      // Labels on "all" view
+      if (currentLayer === 'all') {
+        if (r === 0 && c === 1) td.innerHTML = '<span class="label">耳</span>';
+        if (r === 0 && c === 15) td.innerHTML = '<span class="label">耳</span>';
+        if (r === 4 && c === 6) td.innerHTML = '<span class="label">目</span>';
+        if (r === 4 && c === 11) td.innerHTML = '<span class="label">目</span>';
+        if (r === 6 && c === 8) td.innerHTML = '<span class="label">鼻</span>';
+        if (r === 8 && c === 1) td.innerHTML = '<span class="label">腕</span>';
+        if (r === 9 && c === 17) td.innerHTML = '<span class="label">腕</span>';
+        if (r === 11 && c === 8) td.innerHTML = '<span class="label">ドア</span>';
+        if (r === 10 && c === 5) td.innerHTML = '<span class="label">窓</span>';
+        if (r === 10 && c === 11) td.innerHTML = '<span class="label">窓</span>';
+        if (r === 13 && c === 3) td.innerHTML = '<span class="label">脚</span>';
+        if (r === 14 && c === 13) td.innerHTML = '<span class="label">脚</span>';
+      }
+
+      tr.appendChild(td);
+    }
+    t.appendChild(tr);
+  }
+
+  buildHeightIndicator();
+}
+
+function buildHeightIndicator() {
+  const ind = document.getElementById('height-ind');
+  ind.innerHTML = '';
+  const cellH = 28; // match td height
+
+  HEIGHT_SECTIONS.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'hi-section';
+    div.style.height = (s.rows.length * (cellH + 1)) + 'px'; // +1 for border
+    div.style.borderColor = s.color;
+    div.style.color = s.color;
+    div.style.background = s.bg;
+    div.style.borderRadius = '0 6px 6px 0';
+    div.style.fontSize = '0.7rem';
+    div.innerHTML = s.label.replace(/\n/g, '<br>');
+    ind.appendChild(div);
+  });
+}
+
+function setLayer(name, btn) {
+  currentLayer = name;
+  document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['all','ear','face','body'].forEach(k => {
+    const el = document.getElementById('info-' + k);
+    if (el) el.style.display = (k === name) ? 'block' : 'none';
+  });
+  buildGrid();
+}
+
+// Tooltip
+const tip = document.getElementById('tip');
+document.getElementById('grid').addEventListener('mousemove', e => {
+  const td = e.target.closest('td');
+  if (!td || !td.dataset.n) { tip.style.display = 'none'; return; }
+  tip.textContent = `行${td.dataset.r} 列${td.dataset.c}：${td.dataset.n}`;
+  tip.style.display = 'block';
+  tip.style.left = (e.clientX + 12) + 'px';
+  tip.style.top = (e.clientY - 28) + 'px';
+});
+document.getElementById('grid').addEventListener('mouseleave', () => tip.style.display = 'none');
+
+buildGrid();
+
+// ===== Land Overview Grid (30×24 = 720 tiles) =====
+(function buildLandGrid() {
+  const W = 30, H = 24;
+
+  // Building footprint = body width (cols 3-14 in front view = 12) × depth 8
+  const bodyW = 12, bodyD = 8;
+  // Ears overhang 1 tile on each side beyond body (no floor, just upper structure)
+  const earOverhang = 1;
+  const fullW = bodyW + earOverhang * 2; // 14 = visual width including ears
+
+  // Center the building in the land
+  const bx = Math.floor((W - bodyW) / 2); // body x offset
+  const by = Math.floor((H - bodyD) / 2); // body y offset
+  const ex = bx - earOverhang; // ear x offset
+
+  // Zone types: 0=path, 1=house(body), 2=garden, 3=farm, 4=deco, 5=ear-overhang
+  const land = [];
+  for (let r = 0; r < H; r++) {
+    land[r] = [];
+    for (let c = 0; c < W; c++) {
+      // Building body (actual floor space)
+      if (r >= by && r < by + bodyD && c >= bx && c < bx + bodyW) {
+        land[r][c] = 1;
+      }
+      // Ear overhang (structure above, no floor)
+      else if (r >= by && r < by + bodyD && c >= ex && c < ex + fullW) {
+        land[r][c] = 5;
+      }
+      // Garden: 2-tile ring around building (including ear zone)
+      else if (r >= by - 3 && r < by + bodyD + 3 && c >= ex - 2 && c < ex + fullW + 2) {
+        land[r][c] = 2;
+      }
+      // Farm: left & right strips
+      else if (c < 3 || c >= W - 3) {
+        land[r][c] = 3;
+      }
+      // Deco: top & bottom bands
+      else if (r < 3 || r >= H - 3) {
+        land[r][c] = 4;
+      }
+      // Path / empty
+      else {
+        land[r][c] = 0;
+      }
+    }
+  }
+
+  const zoneColors = ['#e0e0e0', '#d32f2f', '#a5d6a7', '#ffe082', '#90caf9', '#c48b9f'];
+  const zoneNames = ['通路', 'ポチャッコの家（床）', '庭園', '農場', '屋外デコ', '耳の張り出し（床なし）'];
+
+  const tbl = document.getElementById('land-grid');
+  tbl.innerHTML = '';
+
+  // Header row
+  const hr = document.createElement('tr');
+  hr.innerHTML = '<td class="hdr" style="width:20px;height:20px;font-size:8px;"></td>';
+  for (let c = 0; c < W; c++) hr.innerHTML += `<td class="hdr" style="width:20px;height:20px;font-size:8px;">${c+1}</td>`;
+  tbl.appendChild(hr);
+
+  for (let r = 0; r < H; r++) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="hdr" style="width:20px;height:20px;font-size:8px;">${r+1}</td>`;
+    for (let c = 0; c < W; c++) {
+      const v = land[r][c];
+      const td = document.createElement('td');
+      td.style.width = '20px';
+      td.style.height = '20px';
+      td.style.background = zoneColors[v];
+      td.style.border = '1px solid rgba(0,0,0,0.06)';
+      td.style.fontSize = '0';
+      td.title = `(${r+1},${c+1}) ${zoneNames[v]}`;
+      // Label pochacco face in center
+      if (v === 1 && r === by + Math.floor(bodyD/2) && c === bx + Math.floor(bodyW/2)) {
+        td.innerHTML = '<span style="font-size:10px;">🐶</span>';
+      }
+      tr.appendChild(td);
+    }
+    tbl.appendChild(tr);
+  }
+
+  // Stats
+  const counts = [0,0,0,0,0];
+  for (let r = 0; r < H; r++) for (let c = 0; c < W; c++) counts[land[r][c]]++;
+  const total = W * H;
+  document.getElementById('house-pct').textContent = `${counts[1]}タイル (${Math.round(counts[1]/total*100)}%)`;
+  document.getElementById('garden-pct').textContent = `${counts[2]}タイル (${Math.round(counts[2]/total*100)}%)`;
+  document.getElementById('farm-pct').textContent = `${counts[3]}タイル (${Math.round(counts[3]/total*100)}%)`;
+  document.getElementById('deco-pct').textContent = `${counts[4]}タイル (${Math.round(counts[4]/total*100)}%)`;
+  document.getElementById('free-pct').textContent = `${counts[0]}タイル (${Math.round(counts[0]/total*100)}%)`;
+})();
+</script>
+</body>
+</html>
